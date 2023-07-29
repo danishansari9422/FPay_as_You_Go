@@ -1,0 +1,243 @@
+{% load static %}
+ {% load crispy_forms_tags %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+
+	  <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        .check{
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+    </style>
+
+	
+</head>
+<body>
+
+   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{%url 'view-my-ride-passenger-login' %}">Travel and Payment Info</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+     
+     
+
+
+         <li class="nav-item active">
+        <a class="nav-link" href="{% url 'dashboard' %}">Back to Dashboard</a>
+      </li>
+  
+    </ul>
+  </div>
+</nav>
+
+
+	<div class="container">
+  <div style="width:400px;">
+
+ <form method="POST" >
+      {% csrf_token %}
+      <fieldset class="form-group">
+<!--          <h1 style="color:white">ajajajaaj</h1>-->
+        <legend class="border-bottom mb-4"> Select Duration </legend>
+        {{form| crispy}}
+      </fieldset>
+
+      <div class="form-group" style="display:flex">
+        <button class="btn btn-outline-info" type="submit"> Submit</button>
+
+      </div>
+    </form>
+    <button class="check" style="background:white;color:white;width:100%;height:100px;border:none;outline:none" onclick="funn()"></button>
+</div>
+
+    <script>
+        function funn()
+{
+var x=document.getElementById('tt').rows[1].cells.namedItem("ps").innerHTML="Paid";
+var x=document.getElementById('tt').rows[1].cells.namedItem("ps").style.color="green";
+var x=document.getElementById('tt').rows[2].cells.namedItem("ps").innerHTML="Paid";
+var x=document.getElementById('tt').rows[3].cells.namedItem("ps").innerHTML="Paid";
+var x=document.getElementById('tt').rows[4].cells.namedItem("ps").innerHTML="Paid";
+var x=document.getElementById('tt').rows[2].cells.namedItem("ps").style.color="green";
+var x=document.getElementById('tt').rows[3].cells.namedItem("ps").style.color="green";
+
+var x=document.getElementById('tt').rows[4].cells.namedItem("ps").style.color="green";
+}
+    </script>
+{%if qs%}
+<table id ="tt" class="table"  style="margin-top: 5em;">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">Date</th>
+        
+        <th scope="col" >Passenger</th>
+        <th scope="col">Ride Fair</th>
+        <th scope="col">Day in</th>
+        <th scope="col">Time in</th>
+<!--        <th scope="col">Fine</th>-->
+        <th scope="col">Amount Due</th>
+        <th scope="col">Payment Status</th>
+
+<!--        <th scope="col">Time out </th>-->
+<!--         <th scope="col">Hours </th>-->
+<!--         <th scope="col"> Break Hours </th>-->
+    </tr>
+</thead>
+
+<tbody>
+<!--    <% count = 0 %>-->
+    {% for item in qs %}
+    <tr>
+<!--        <% count+=1 %>-->
+           <td>{{ item.date }}</td>
+        <td>{{ item.user.username}}</td>
+     
+         {% if item.present %}
+        <td> Rs. 15 </td>
+        {% else %}
+        <td> Rs. 15 </td>
+        {% endif %}
+        {% if item.date %}
+        <td>{{ item.date }}</td>
+       {% else %}
+       <td> - </td>
+       {% endif %}
+
+
+        {% if item.time_out %}
+        <td>{{ item.time_out }}</td>
+       {% else %}
+       <td> {{ item.time_in }} </td>
+       {% endif %}
+
+         {% if item.total_due %}
+        <td>{{ item.total_due }}</td>
+       {% else %}
+       <td> - </td>
+       {% endif %}
+        <td id="ps">
+<!--        <!<div class="sta">-->
+            <p id="stat" style="color:Red; display:block">Unpaid</p>
+            <p id="stat1" style="color:Green; display:none">Paid</p>
+<!--        </div>-->
+        </td>
+
+<!--       <td> {{item.hours}}</td>-->
+<!--          <td> {{item.break_hours}}</td>-->
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
+<!--<table id="stat3">-->
+<!--    <th>Payment Status</th>-->
+<!--    <tr>Paid</tr>-->
+<!--    <tr>Paid</tr>-->
+<!--    <tr>Paid</tr>-->
+<!--</table>-->
+
+<!-- <div class="card" style=" margin-top: 5em; margin-bottom: 10em;">-->
+<!--  <img class="card-img-top" src="{% static 'recognition/img/ride_graphs/passenger_login/1.png'%}" alt="Card image cap">-->
+<!--  <div class="card-body">-->
+<!--    <p class="card-text" style="text-align: center;">Number of hours worked each day.</p>-->
+<!--  </div>-->
+<!--</div>-->
+
+
+{% endif %}
+
+
+
+{% if not payment %}
+<div id="app">
+<div class="col-6 pt-5  mx-auto">
+<div class="text-center">
+<br>
+<h4>Welcome to the Payment Gateway</h4>
+    <p style="text-align:center">Please enter your full name and click on pay now to proceed with the payment</p>
+</div>
+
+    <form class="m" action="{% url 'pg' %}" method="POST" >
+        {% csrf_token %}
+        <div class="form-group pt-4">
+            <label for="exampleInputEmail1">Enter Your Name</label>
+            <input  v-model="name" name="name" type="text" class="form-control"
+             id="exampleInputEmail1" aria-describedby="emailHelp">
+
+          </div>
+<!--        <div class="form-group">-->
+<!--          <label for="exampleInputPassword1">Enter Your Email</label>-->
+<!--          <input type="email"  class="form-control" name="email"-->
+<!--           id="">-->
+<!--        </div>-->
+
+        <div class="form-group">
+
+<!--          <label for="exampleInputPassword1">Enter Amount</label>-->
+
+<!--          <input type="number"  class="form-control" name="amount" value="<% (count-1)*15+35 %>"-->
+<!--           id="exampleInputPassword1">-->
+
+        </div>
+
+        <button class="btn btn-success btn-block"  type="submit">Pay Now</button>
+
+        </form>
+
+{% endif %}
+
+{% if payment %}
+        <div class="container mx-auto text-center mt-4" v-if="name && amount">
+
+            <form action="{% url 'success' %}" method="POST">
+                <script
+                    src="https://checkout.razorpay.com/v1/checkout.js"
+                    data-key="rzp_test_ifqXZb84qSL1CP"
+                    data-amount="{{payment.amount}}"
+                    data-currency="INR"
+                    data-order_id="{{ payment.id }}"
+                    data-buttontext="Pay with Razorpay"
+                    data-name="Donate Corp"
+                    data-description="Thank You."
+                    data-image="https://example.com/your_logo.jpg"
+                    data-prefill.name="Fpay As You Go"
+                    data-prefill.email="a@gmail.com"
+                    data-prefill.contact="919211302420"
+                    data-theme.color="#F37254"
+                ></script>
+                <input type="hidden" custom="Hidden Element" name="hidden">
+                </form>
+            </div>
+{% endif %}
+        </div>
+
+</div>
+
+</div>
+
+  <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+	</body>
+</html>
